@@ -1,43 +1,38 @@
-import { ChangeEvent, useState } from 'react';
-import dayjs from 'dayjs';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebounce } from '@uidotdev/usehooks';
 import { ArchiveBoxXMarkIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import { Arrays, Option } from '@leto/core';
+import { Arrays } from '@leto/core';
 
 import FrontPageTemplate from '../../components/FrontPageTemplate';
 import { AccommodationCard, AccommodationCardLoading } from './AccommodationCard';
 import { getAccommodations } from './Homepage.queries';
 import { 
-  CHECK_IN_QUERY_PARAMS_KEY,
-  CHECK_OUT_QUERY_PARAMS_KEY,
   createAsyncListData, 
   DESTINATION_DEBOUNCE_DURATION, 
-  DESTINATION_QUERY_PARAMS_KEY,
-  ROOMS_QUERY_PARAMS_KEY,
-  matchAsyncListData,
-  replaceSearchParams, 
+  matchAsyncListData, 
 } from './Homepage.helpers';
+import { 
+  createCheckInEventHandler,
+  createCheckOutEventHandler,
+  createDestinationEventHandler,
+  createRoomsEventHandler,
+  getCheckIn, 
+  getCheckOut, 
+  getDestination, 
+  getRooms, 
+} from '../../helpers/front-page-parameters';
 
 function Homepage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
 
-  const destination = Option.fromNullOrUndefined(
-    searchParams.get(DESTINATION_QUERY_PARAMS_KEY)
-  );
-  
-  const checkIn = searchParams.has(CHECK_IN_QUERY_PARAMS_KEY) 
-    ? searchParams.get(CHECK_IN_QUERY_PARAMS_KEY)!
-    : dayjs().format('YYYY-MM-DD');
-
-  const checkOut = searchParams.has(CHECK_OUT_QUERY_PARAMS_KEY) 
-    ? searchParams.get(CHECK_OUT_QUERY_PARAMS_KEY)!
-    : dayjs().add(1, 'day').format('YYYY-MM-DD');
-
-  const rooms = searchParams.get(ROOMS_QUERY_PARAMS_KEY) || 1;
+  const destination = getDestination(searchParams);
+  const checkIn = getCheckIn(searchParams);
+  const checkOut = getCheckOut(searchParams);
+  const rooms = getRooms(searchParams);
 
   const debouncedDestination = useDebounce(
     destination, 
@@ -53,46 +48,10 @@ function Homepage() {
 
   const asyncListData = createAsyncListData({ loading, data, error });
 
-  const handleDestinationChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newSearchParams = replaceSearchParams(
-      searchParams, 
-      DESTINATION_QUERY_PARAMS_KEY, 
-      event.target.value,
-    );
-
-    setLoading(true);
-    setSearchParams(newSearchParams);
-  };
-
-  const handleCheckInDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newSearchParams = replaceSearchParams(
-      searchParams, 
-      CHECK_IN_QUERY_PARAMS_KEY, 
-      event.target.value,
-    );
-
-    setSearchParams(newSearchParams);
-  }
-
-  const handleCheckOutDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newSearchParams = replaceSearchParams(
-      searchParams, 
-      CHECK_OUT_QUERY_PARAMS_KEY, 
-      event.target.value,
-    );
-
-    setSearchParams(newSearchParams);
-  }
-
-  const handleRoomsChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newSearchParams = replaceSearchParams(
-      searchParams,
-      ROOMS_QUERY_PARAMS_KEY,
-      event.target.value,
-    );
-
-    setSearchParams(newSearchParams);
-  }
+  const handleDestinationChange = createDestinationEventHandler(searchParams, setSearchParams);
+  const handleCheckInDateChange = createCheckInEventHandler(searchParams, setSearchParams);
+  const handleCheckOutDateChange = createCheckOutEventHandler(searchParams, setSearchParams);
+  const handleRoomsChange = createRoomsEventHandler(searchParams, setSearchParams);
 
   const handleAccommodationCardClick = (id: number) => {
     navigate(`/accom/${id}`);

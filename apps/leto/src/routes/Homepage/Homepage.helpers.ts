@@ -1,37 +1,10 @@
 import { AccommodationDisplayItem, GetAccommodationsResponse } from "@leto/core";
 
 /**
- * Query Params Mutation
+ * Destination Debounce Duration
  */
 
-export const DESTINATION_QUERY_PARAMS_KEY = 'd' as const;
-export const CHECK_IN_QUERY_PARAMS_KEY = 'ci' as const;
-export const CHECK_OUT_QUERY_PARAMS_KEY = 'co' as const;
-export const ROOMS_QUERY_PARAMS_KEY = 'r' as const;
-
-type QueryParamsKey =
-  | typeof DESTINATION_QUERY_PARAMS_KEY
-  | typeof CHECK_IN_QUERY_PARAMS_KEY
-  | typeof CHECK_OUT_QUERY_PARAMS_KEY
-  | typeof ROOMS_QUERY_PARAMS_KEY;
-
 export const DESTINATION_DEBOUNCE_DURATION = 1000;
-
-export function replaceSearchParams(
-  searchParams: URLSearchParams,
-  key: QueryParamsKey,
-  value?: string,
-) {
-  const newSearchParams = new URLSearchParams(searchParams);
-
-  if (value) {
-    searchParams.set(key, value);
-  } else {
-    searchParams.delete(key);
-  }
-
-  return newSearchParams;
-}
 
 /**
  * Async List Acommodations Data

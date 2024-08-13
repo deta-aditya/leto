@@ -1,19 +1,26 @@
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { CheckIcon, StarIcon } from "@heroicons/react/24/solid";
 import { Arrays, Option } from "@leto/core";
 import FrontPageTemplate from "../../components/FrontPageTemplate";
 import ShimmeredImage from "../../components/ShimmeredImage";
+import { getCheckIn, getCheckOut, getRooms } from "../../helpers/front-page-parameters";
 import { getAccommodationDetails } from "./AccommodationDetails.queries";
-import UnitCard from "./UnitCard/UnitCard";
-import { UnitCardLoading } from "./UnitCard";
+import { UnitCardLoading, UnitCard } from "./UnitCard";
 
 function AccommodationDetails() {
   const { accomId } = useParams();
 
+  // This component should be called on route with `accomId` as params
   if (!accomId) {
     throw new Error('Impossible page access! "accomId" should always exist in this page.');
   }
+
+  const [searchParams] = useSearchParams();
+
+  const checkIn = getCheckIn(searchParams);
+  const checkOut = getCheckOut(searchParams);
+  const rooms = getRooms(searchParams);
 
   const { data, error } = useQuery({
     queryKey: ['accommodation-details', accomId],

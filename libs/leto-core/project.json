@@ -1,0 +1,19 @@
+{
+  "name": "leto-core",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "leto-core/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/leto-core",
+        "main": "leto-core/src/index.ts",
+        "tsConfig": "leto-core/tsconfig.lib.json",
+        "assets": ["leto-core/*.md"]
+      }
+    }
+  }
+}

@@ -54,36 +54,43 @@ function Homepage() {
   const handleRoomsChange = createRoomsEventHandler(searchParams, setSearchParams);
 
   const handleAccommodationCardClick = (id: number) => {
-    navigate(`/accom/${id}`);
+    navigate(`/accom/${id}?${searchParams.toString()}`,);
   };
 
   return (
     <FrontPageTemplate>
-      <section className="flex justify-center drop-shadow gap-1">
+      <section 
+        className="grid drop-shadow-xl bg-gradient-to-b from-blue-700 to-blue-500 p-8 rounded-lg items-center gap-y-2 gap-x-4"
+        style={{ gridTemplateColumns: '2fr repeat(3, 1fr)' }}
+      >
+        <label className="text-white">Destination</label>
+        <label className="text-white">Check In</label>
+        <label className="text-white">Check Out</label>
+        <label className="text-white">Rooms</label>
         <input 
           type="text" 
-          placeholder="Destination" 
-          className="p-4 w-[24rem] rounded-l-md" 
+          placeholder="Jakarta, Bandung, etc." 
+          className="p-4 rounded-lg border" 
           onChange={handleDestinationChange} 
         />
         <input 
           type="date" 
           placeholder="Check in" 
-          className="p-4" 
+          className="p-4 rounded-lg border" 
           value={checkIn}
           onChange={handleCheckInDateChange}
         />
         <input 
           type="date" 
           placeholder="Check out" 
-          className="p-4" 
+          className="p-4 rounded-lg border" 
           value={checkOut}
           onChange={handleCheckOutDateChange}
         />
         <input 
           type="number" 
           placeholder="Rooms" 
-          className="p-4 rounded-r-md"
+          className="p-4 rounded-lg border" 
           value={rooms}
           onChange={handleRoomsChange}
         />

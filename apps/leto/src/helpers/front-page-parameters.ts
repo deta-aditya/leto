@@ -26,8 +26,8 @@ export function getCheckIn(searchParams: URLSearchParams, now = dayjs) {
 }
 
 export function getCheckOut(searchParams: URLSearchParams, now = dayjs) {
-  return searchParams.has(CHECK_IN_QUERY_PARAMS_KEY) 
-    ? searchParams.get(CHECK_IN_QUERY_PARAMS_KEY)!
+  return searchParams.has(CHECK_OUT_QUERY_PARAMS_KEY) 
+    ? searchParams.get(CHECK_OUT_QUERY_PARAMS_KEY)!
     : now().add(1, 'day').format('YYYY-MM-DD');
 }
 

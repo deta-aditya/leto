@@ -4,7 +4,7 @@ import { CheckIcon, StarIcon } from "@heroicons/react/24/solid";
 import { Arrays, Option } from "@leto/core";
 import FrontPageTemplate from "../../components/FrontPageTemplate";
 import ShimmeredImage from "../../components/ShimmeredImage";
-import { getCheckIn, getCheckOut, getRooms } from "../../helpers/front-page-parameters";
+import { createCheckInEventHandler, createCheckOutEventHandler, createRoomsEventHandler, getCheckIn, getCheckOut, getRooms } from "../../helpers/front-page-parameters";
 import { getAccommodationDetails } from "./AccommodationDetails.queries";
 import { UnitCardLoading, UnitCard } from "./UnitCard";
 
@@ -16,7 +16,7 @@ function AccommodationDetails() {
     throw new Error('Impossible page access! "accomId" should always exist in this page.');
   }
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const checkIn = getCheckIn(searchParams);
   const checkOut = getCheckOut(searchParams);
@@ -29,6 +29,10 @@ function AccommodationDetails() {
 
   const maybeError = Option.fromNullOrUndefined(error);
   const maybeData = Option.fromNullOrUndefined(data);
+
+  const handleCheckInDateChange = createCheckInEventHandler(searchParams, setSearchParams);
+  const handleCheckOutDateChange = createCheckOutEventHandler(searchParams, setSearchParams);
+  const handleRoomsChange = createRoomsEventHandler(searchParams, setSearchParams);
 
   const handleBook = (unitId: number) => {
     //
@@ -99,19 +103,50 @@ function AccommodationDetails() {
                   })}
                 </div>
               </section>
-              <section className="flex flex-col gap-7">
-                {Option.match(maybeData, {
-                  none: () => Arrays.range(3).map(index => (
-                    <UnitCardLoading key={index} />
-                  )),
-                  some: data => data.units.map(unit => (
-                    <UnitCard 
-                      key={unit.id} 
-                      unit={unit}
-                      onBookClick={() => handleBook(unit.id)} 
-                    />
-                  )),
-                })}
+              <section className="flex flex-col gap-8">
+                <section 
+                  className="grid drop-shadow-xl bg-gradient-to-b from-blue-700 to-blue-500 p-6 rounded-lg items-center gap-y-2 gap-x-4"
+                  style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
+                >
+                  <label className="text-white">Check In</label>
+                  <label className="text-white">Check Out</label>
+                  <label className="text-white">Rooms</label>
+                  <input 
+                    type="date" 
+                    placeholder="Check in" 
+                    className="p-4 rounded-lg border" 
+                    value={checkIn}
+                    onChange={handleCheckInDateChange}
+                  />
+                  <input 
+                    type="date" 
+                    placeholder="Check out" 
+                    className="p-4 rounded-lg border" 
+                    value={checkOut}
+                    onChange={handleCheckOutDateChange}
+                  />
+                  <input 
+                    type="number" 
+                    placeholder="Rooms" 
+                    className="p-4 rounded-lg border" 
+                    value={rooms}
+                    onChange={handleRoomsChange}
+                  />
+                </section>
+                <section className="flex flex-col gap-7">
+                  {Option.match(maybeData, {
+                    none: () => Arrays.range(3).map(index => (
+                      <UnitCardLoading key={index} />
+                    )),
+                    some: data => data.units.map(unit => (
+                      <UnitCard 
+                        key={unit.id} 
+                        unit={unit}
+                        onBookClick={() => handleBook(unit.id)} 
+                      />
+                    )),
+                  })}
+                </section>
               </section>
             </section>
           </div>

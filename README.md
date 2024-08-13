@@ -6,6 +6,12 @@
 
 Why Leto? Because it sounds like "Hotel" when spoken backwards...
 
+# Prerequisites
+
+* Node.js v20
+* MySQL v8
+* Any browser
+
 # Preparation
 
 1. Clone the repo into your environment

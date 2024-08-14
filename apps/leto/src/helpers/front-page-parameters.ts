@@ -6,6 +6,7 @@ export const DESTINATION_QUERY_PARAMS_KEY = 'd' as const;
 export const CHECK_IN_QUERY_PARAMS_KEY = 'ci' as const;
 export const CHECK_OUT_QUERY_PARAMS_KEY = 'co' as const;
 export const ROOMS_QUERY_PARAMS_KEY = 'r' as const;
+export const UNIT_ID_QUERY_PARAMS_KEY = 'unit-id' as const;
 
 type QueryParamsKey =
   | typeof DESTINATION_QUERY_PARAMS_KEY
@@ -14,7 +15,7 @@ type QueryParamsKey =
   | typeof ROOMS_QUERY_PARAMS_KEY;
 
 export function getDestination(searchParams: URLSearchParams) {
-  return Option.fromNullOrUndefined(
+  return Option.fromNullable(
     searchParams.get(DESTINATION_QUERY_PARAMS_KEY)
   );
 }
@@ -32,7 +33,11 @@ export function getCheckOut(searchParams: URLSearchParams, now = dayjs) {
 }
 
 export function getRooms(searchParams: URLSearchParams) {
-  return searchParams.get(ROOMS_QUERY_PARAMS_KEY) || 1
+  return Number(searchParams.get(ROOMS_QUERY_PARAMS_KEY)) || 1
+}
+
+export function getUnitId(searchParams: URLSearchParams) {
+  return searchParams.get(UNIT_ID_QUERY_PARAMS_KEY);
 }
 
 const createEventHandler = (

@@ -6,7 +6,7 @@ function FrontPageTemplate(props: { children: ReactNode }) {
   return (
     <main className="flex flex-col gap-12">
       <nav className="sticky top-0 bg-white z-10">
-        <div className="container mx-auto flex justify-between py-4">
+        <div className="container mx-auto flex justify-between items-center py-4">
           <Link to="/">
             <h1 className="logo text-4xl text-blue-600">Leto</h1>
           </Link>

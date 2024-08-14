@@ -1,5 +1,6 @@
 import { Kysely } from "kysely";
-import { AccommodationTable, UnitTable } from "./tables/accommodation";
+import { AccommodationTable } from "./tables/accommodation";
+import { UnitTable } from "./tables/unit";
 
 export type Database = {
   accommodation: AccommodationTable;

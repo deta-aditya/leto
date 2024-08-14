@@ -18,7 +18,7 @@ export function None<T>(): Option<T> {
   return { kind: 'none' };
 }
 
-export function fromNullOrUndefined<T>(value: T | null | undefined): Option<T> {
+export function fromNullable<T>(value: T | null | undefined): Option<T> {
   return value === null || value === undefined ? None() : Some(value);
 }
 
@@ -36,4 +36,11 @@ export function match<T, U>(option: Option<T>, matcher: {
     case 'some':
       return matcher.some(option.value);
   }
+}
+
+export function map<T, U>(option: Option<T>, mapper: (value: T) => U): Option<U> {
+  return match(option, {
+    some: value => Some(mapper(value)),
+    none: () => None(),
+  });
 }

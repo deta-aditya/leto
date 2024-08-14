@@ -30,7 +30,7 @@ export const getAccommodationsHttpController: RequestHandler
   const parseResult = parseRequest(RequestSchema, httpRequest, 'query');
 
   const responseResult = Result.map(parseResult, request => getAccommodations({
-    searchQuery: Option.fromNullOrUndefined(request.searchQuery),
+    searchQuery: Option.fromNullable(request.searchQuery),
   }));
 
   Result.match(responseResult, {

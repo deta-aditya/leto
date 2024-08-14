@@ -1,20 +1,24 @@
 import { useQuery } from "react-query";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { CheckIcon, StarIcon } from "@heroicons/react/24/solid";
 import { Arrays, Option } from "@leto/core";
 import FrontPageTemplate from "../../components/FrontPageTemplate";
 import ShimmeredImage from "../../components/ShimmeredImage";
-import { createCheckInEventHandler, createCheckOutEventHandler, createRoomsEventHandler, getCheckIn, getCheckOut, getRooms } from "../../helpers/front-page-parameters";
+import { 
+  createCheckInEventHandler, 
+  createCheckOutEventHandler, 
+  createRoomsEventHandler, 
+  getCheckIn, 
+  getCheckOut, 
+  getRooms, 
+  UNIT_ID_QUERY_PARAMS_KEY, 
+} from "../../helpers/front-page-parameters";
 import { getAccommodationDetails } from "./AccommodationDetails.queries";
 import { UnitCardLoading, UnitCard } from "./UnitCard";
 
 function AccommodationDetails() {
   const { accomId } = useParams();
-
-  // This component should be called on route with `accomId` as params
-  if (!accomId) {
-    throw new Error('Impossible page access! "accomId" should always exist in this page.');
-  }
+  const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -24,18 +28,20 @@ function AccommodationDetails() {
 
   const { data, error } = useQuery({
     queryKey: ['accommodation-details', accomId],
-    queryFn: () => getAccommodationDetails(accomId),
+    queryFn: () => getAccommodationDetails(accomId || ''),
+    enabled: accomId !== undefined,
   });
 
-  const maybeError = Option.fromNullOrUndefined(error);
-  const maybeData = Option.fromNullOrUndefined(data);
+  const maybeError = Option.fromNullable(error);
+  const maybeData = Option.fromNullable(data);
 
   const handleCheckInDateChange = createCheckInEventHandler(searchParams, setSearchParams);
   const handleCheckOutDateChange = createCheckOutEventHandler(searchParams, setSearchParams);
   const handleRoomsChange = createRoomsEventHandler(searchParams, setSearchParams);
 
   const handleBook = (unitId: number) => {
-    //
+    searchParams.append(UNIT_ID_QUERY_PARAMS_KEY, String(unitId));
+    navigate(`/checkout?${searchParams.toString()}`);
   }
 
   return (
@@ -105,8 +111,7 @@ function AccommodationDetails() {
               </section>
               <section className="flex flex-col gap-8">
                 <section 
-                  className="grid drop-shadow-xl bg-gradient-to-b from-blue-700 to-blue-500 p-6 rounded-lg items-center gap-y-2 gap-x-4"
-                  style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
+                  className="grid grid-cols-3 drop-shadow-xl bg-gradient-to-b from-blue-700 to-blue-500 p-6 rounded-lg items-center gap-y-2 gap-x-4"
                 >
                   <label className="text-white">Check In</label>
                   <label className="text-white">Check Out</label>
@@ -116,6 +121,7 @@ function AccommodationDetails() {
                     placeholder="Check in" 
                     className="p-4 rounded-lg border" 
                     value={checkIn}
+                    disabled={maybeData.kind === 'none'}
                     onChange={handleCheckInDateChange}
                   />
                   <input 
@@ -123,6 +129,7 @@ function AccommodationDetails() {
                     placeholder="Check out" 
                     className="p-4 rounded-lg border" 
                     value={checkOut}
+                    disabled={maybeData.kind === 'none'}
                     onChange={handleCheckOutDateChange}
                   />
                   <input 
@@ -130,6 +137,7 @@ function AccommodationDetails() {
                     placeholder="Rooms" 
                     className="p-4 rounded-lg border" 
                     value={rooms}
+                    disabled={maybeData.kind === 'none'}
                     onChange={handleRoomsChange}
                   />
                 </section>

@@ -16,4 +16,7 @@ export type GetAccommodationById =
 export type GetUnitsByAccommodationId =
   (accommodationId: number) => Promise<Array<Unit>>;
 
+export type GetUnitById = 
+  (unitId: number) => Promise<Option<Unit>>;
+
 export type GetRandomIntegerOfRange = (max: number) => number;

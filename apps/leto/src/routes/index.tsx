@@ -1,5 +1,6 @@
 import { RouteObject } from "react-router-dom";
 import Homepage from "./Homepage";
+import Checkout from "./Checkout";
 import AccommodationDetails from "./AccommodationDetails";
 
 export const routes: RouteObject[] = [
@@ -12,21 +13,8 @@ export const routes: RouteObject[] = [
     element: <AccommodationDetails />,
   },
   {
-    path: '/book/:bookId',
-    children: [
-      {
-        path: 'checkout',
-        element: <div>Checkout</div>,
-      },
-      {
-        path: 'payment',
-        element: <div>Payment</div>,
-      },
-      {
-        path: 'finished',
-        element: <div>Finished</div>,
-      },
-    ]
+    path: '/checkout',
+    element: <Checkout />
   },
   {
     path: '/my',
